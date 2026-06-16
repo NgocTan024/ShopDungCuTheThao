@@ -1,8 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Product>
+@{
+    var currentUrl = Context.Request.Path + Context.Request.QueryString;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="bg-dark text-white py-5 position-relative mb-5 text-center" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1500') center/cover;">
+    <div class="container py-5">
+        <span class="badge bg-warning text-dark fw-bold mb-3 px-3 py-2 text-uppercase">New Season Aesthetics</span>
+        <h1 class="display-3 fw-bold tracking-tight">NÂNG TẦM SỨC MẠNH CỦA BẠN</h1>
+        <p class="lead text-light border-0 my-3">Trang thiết bị thể thao đỉnh cao nâng tầm hiệu suất tập luyện.</p>
+        <a asp-controller="Products" asp-action="Shop" class="btn btn-gradient btn-lg fw-bold px-5 py-3 rounded-pill mt-3 shadow">KHÁM PHÁ CỬA HÀNG</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
+        <h2 class="fw-bold text-dark mb-0">🔥 SẢN PHẨM BÁN CHẠY XU HƯỚNG</h2>
+        <a asp-controller="Products" asp-action="Shop" class="text-primary fw-bold text-decoration-none">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card product-card shadow-sm h-100 p-3 bg-white">
+                    <div class="bg-light rounded p-4 text-center mb-3 text-secondary border-0" style="min-height: 160px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-box-seam display-4 text-muted"></i>
+                    </div>
+                    <span class="badge bg-danger-subtle text-danger fw-bold mb-2 align-self-start px-2.5 py-1">BEST SELLER</span>
+                    <h5 class="fw-bold text-dark text-truncate">@item.Name</h5>
+                    <p class="text-muted small text-start line-clamp" style="height: 40px; overflow: hidden;">@item.Detail</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="text-danger fw-bold fs-4">@item.Price.ToString("N0") đ</span>
+                    </div>
+                    <div class="row g-2 mt-2">
+                        <div class="col-6"><a asp-controller="Products" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-outline-dark btn-sm w-100 rounded-pill">Chi tiết</a></div>
+                        <div class="col-6"><a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pId="@item.Id" asp-route-returnUrl="@currentUrl" class="btn btn-dark btn-sm w-100 rounded-pill"><i class="bi bi-bag-plus"></i> + Giỏ</a></div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

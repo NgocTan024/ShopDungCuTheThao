@@ -1,23 +1,36 @@
 ﻿using SportShop.Data;
+using SportShop.Models.Interfaces;
+using SportShop.Models.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Thêm dịch vụ MVC và Razor Pages cho Identity UI
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// 2. Kết nối Database với tính năng tự thử lại khi nghẽn kết nối (EnableRetryOnFailure)
+// Kết nối cơ sở dữ liệu
 builder.Services.AddDbContext<SportShopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-    sqlOptions => sqlOptions.EnableRetryOnFailure()));
+    sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
 
-// 3. Đăng ký trọn gói hệ thống tài khoản Identity
+// Hệ thống xác thực danh tính người dùng Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddDefaultUI()
     .AddEntityFrameworkStores<SportShopDbContext>()
     .AddDefaultTokenProviders();
+
+// Đăng ký dịch vụ Repositories vào IoC Container
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>(ShoppingCartRepository.GetCart);
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -29,15 +42,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSession(); // Chạy Session trước khi Routing
 
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();

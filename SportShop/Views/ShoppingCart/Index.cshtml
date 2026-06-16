@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ShoppingCartItem>
+
+<div class="container mt-5">
+    <h2 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-bag-heart"></i> GIỎ HÀNG THỂ THAO CỦA BẠN</h2>
+    @if (!Model.Any())
+    {
+        <div class="text-center my-5 py-5 card border-0 bg-white shadow-sm rounded-4">
+            <i class="bi bi-cart-x text-muted" style="font-size: 6rem;"></i>
+            <h4 class="text-muted fw-bold mt-3">Giỏ hàng hiện tại đang trống!</h4>
+            <a asp-controller="Products" asp-action="Shop" class="btn btn-dark mt-3 px-5 py-2.5 rounded-pill fw-bold">VÀO SIÊU THỊ MUA SẮM</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="card border-0 shadow-sm p-3 bg-white rounded-4">
+                    <table class="table align-middle border-0 mb-0">
+                        <thead class="table-light">
+                            <tr class="text-uppercase text-muted small border-0">
+                                <th class="border-0 py-3">Tên dụng cụ</th>
+                                <th class="border-0 py-3 text-center">Số lượng</th>
+                                <th class="border-0 py-3 text-end">Đơn giá</th>
+                                <th class="border-0 py-3 text-end">Tổng</th>
+                                <th class="border-0 py-3 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="border-bottom text-dark">
+                                    <td class="fw-bold py-3">@item.Product!.Name</td>
+                                    <td class="text-center"><span class="badge bg-secondary-subtle border border-secondary text-dark px-3 py-2 fs-6 rounded-3">@item.Qty</span></td>
+                                    <td class="text-end">@item.Product.Price.ToString("N0") đ</td>
+                                    <td class="text-end text-primary fw-bold">@((item.Qty * item.Product.Price).ToString("N0")) đ</td>
+                                    <td class="text-center">
+                                        <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart" asp-route-pId="@item.Product.Id" class="btn btn-sm btn-outline-danger px-3 rounded-pill fw-bold"><i class="bi bi-dash-circle"></i> Bớt</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card p-4 shadow-sm border-0 bg-white rounded-4">
+                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">TÓM TẮT ĐƠN HÀNG</h5>
+                    <div class="d-flex justify-content-between align-items-center my-4">
+                        <span class="fs-5 text-muted">Thành tiền:</span>
+                        <span class="fs-3 text-danger fw-bold">@ViewBag.TotalCart.ToString("N0") đ</span>
+                    </div>
+                    <a asp-controller="Orders" asp-action="Checkout" class="btn btn-success btn-lg w-100 fw-bold py-3 rounded-pill shadow-sm"><i class="bi bi-credit-card-2-back"></i> TIẾN HÀNH ĐẶT HÀNG</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
