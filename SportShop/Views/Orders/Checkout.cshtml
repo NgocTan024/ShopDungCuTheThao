@@ -15,8 +15,8 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label asp-for="Email" class="form-label fw-bold text-muted small text-uppercase">Hộp thư nhận Email hóa đơn</label>
-                <input asp-for="Email" type="email" class="form-control rounded-3 py-2" placeholder="customer@example.com" required />
+                <label asp-for="Email" class="form-label fw-bold text-muted small text-uppercase">Email nhận hóa đơn</label>
+                <input asp-for="Email" type="email" class="form-control rounded-3 py-2 bg-light text-dark" value="@User.Identity?.Name" readonly required />
             </div>
             <div class="mb-3">
                 <label asp-for="Phone" class="form-label fw-bold text-muted small text-uppercase">Số điện thoại liên hệ</label>
