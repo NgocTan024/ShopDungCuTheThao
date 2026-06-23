@@ -26,9 +26,11 @@
                 {
                     <div class="col-md-4 mb-4">
                         <div class="card product-card shadow-sm h-100 p-3 bg-white">
-                            <div class="bg-light rounded p-4 text-center mb-3 text-muted border-0" style="min-height: 140px; display: flex; align-items: center; justify-content: center;">
-                                <i class="bi bi-trophy text-secondary fs-1"></i>
+
+                            <div class="text-center mb-3 bg-light rounded-3" style="height: 160px; overflow: hidden;">
+                                <img src="@item.ImageUrl" class="w-100 h-100 object-fit-cover" alt="@item.Name" onerror="this.onerror=null; this.src='https://placehold.co/300x200?text=SportShop';" />
                             </div>
+
                             <span class="badge bg-secondary mb-2 align-self-start">@item.Category</span>
                             <h6 class="fw-bold text-dark text-truncate mb-1">@item.Name</h6>
                             <h5 class="text-primary fw-bold mt-2">@item.Price.ToString("N0") đ</h5>

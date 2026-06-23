@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "_Layout";
+    var method = ViewBag.PaymentMethod as string;
+}
+
+<div class="container text-center my-5 py-3">
+    <div class="bg-white border-0 shadow-sm p-5 rounded-4 mx-auto" style="max-width: 600px;">
+        <div class="text-success mb-3" style="font-size: 5rem;"><i class="bi bi-check-circle-fill"></i></div>
+        <h1 class="text-success fw-bold">ĐẶT HÀNG THÀNH CÔNG!</h1>
+        <p class="mt-3 fs-5 text-dark">Cảm ơn bạn đã mua sắm thiết bị thể thao tại <strong>SportShop</strong>.</p>
+
+        @if (method == "MoMo" || method == "VNPAY")
+        {
+            <!-- HIỂN THỊ KHUNG MÃ QR TƯỢNG TRƯNG ĐỂ SHOP TRÔNG NHƯ THẬT -->
+            <div class="my-4 p-4 rounded-4 border border-2 border-dashed bg-light mx-auto" style="max-width: 340px;">
+                <span class="badge @(method == "MoMo" ? "bg-danger" : "bg-primary") px-3 py-2 mb-3">
+                    MÔ PHỎNG THANH TOÁN @method.ToUpper()
+                </span>
+
+                <div class="bg-white p-3 rounded-3 shadow-sm d-inline-block border">
+                    <i class="bi bi-qr-code text-dark" style="font-size: 8rem;"></i>
+                </div>
+
+                <p class="text-muted small mt-3 mb-0">
+                    <i class="bi bi-info-circle"></i> Đây là tính năng thanh toán mô phỏng.<br />
+                    Hệ thống đã tự động xác nhận đơn hàng thành công!
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-secondary border-0 my-4 py-3 rounded-3">
+                📦 Đơn hàng của bạn được chọn hình thức <strong>Nhận hàng trả tiền (COD)</strong>.
+            </div>
+        }
+
+        <p class="text-muted small">Bạn có thể vào mục <strong>"Đơn hàng của tôi"</strong> trên thanh thực đơn để kiểm tra trạng thái đơn.</p>
+        <div class="d-flex gap-2 justify-content-center mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-dark btn-md rounded-pill px-4 fw-bold">Quay lại trang chủ</a>
+            <a asp-controller="Orders" asp-action="MyOrders" class="btn btn-outline-primary btn-md rounded-pill px-4 fw-bold">Xem đơn đã đặt</a>
+        </div>
+    </div>
+</div>

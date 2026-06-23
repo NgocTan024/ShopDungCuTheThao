@@ -1,0 +1,50 @@
+﻿@{
+    Layout = "_Layout";
+    var returnUrl = ViewBag.ReturnUrl as string;
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="card shadow border-0 rounded-4 p-4 p-sm-5 bg-white" style="max-width: 440px; width: 100%;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-dark text-uppercase" style="letter-spacing: 1px;"><span class="text-warning">SPORT</span>SHOP</h2>
+            <p class="text-muted small">Đăng nhập để trải nghiệm mua sắm và nhận nhiều ưu đãi</p>
+        </div>
+
+        <form asp-controller="Account" asp-action="Login" asp-route-returnUrl="@returnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small border-0 rounded-3"></div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-muted small text-uppercase">Địa chỉ Email</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                    <input type="email" name="email" class="form-control bg-light border-start-0 py-2 fs-6 text-dark shadow-none" placeholder="username@example.com" required />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-muted small text-uppercase">Mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" class="form-control bg-light border-start-0 py-2 fs-6 text-dark shadow-none" placeholder="••••••••" required />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input type="checkbox" name="rememberMe" value="true" class="form-check-input shadow-none" id="rememberMe">
+                    <label class="form-check-label text-muted small" for="rememberMe">Ghi nhớ đăng nhập</label>
+                </div>
+                <a href="#" class="text-decoration-none small fw-bold text-primary">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" class="btn btn-gradient w-100 btn-lg fw-bold py-2.5 rounded-pill shadow-sm mb-2">
+                <i class="bi bi-box-arrow-in-right me-1"></i> ĐĂNG NHẬP NGAY
+            </button>
+
+            <div class="text-center mt-3">
+                <span class="text-muted small">Bạn chưa có tài khoản?</span>
+                <a asp-controller="Account" asp-action="Register" class="text-decoration-none small fw-bold text-danger ms-1">Đăng ký thành viên</a>
+            </div>
+        </form>
+    </div>
+</div>

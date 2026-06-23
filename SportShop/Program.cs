@@ -19,6 +19,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddDefaultUI()
     .AddEntityFrameworkStores<SportShopDbContext>()
     .AddDefaultTokenProviders();
+// Thêm đoạn này vào dưới phần builder.Services.AddDefaultIdentity...
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+});
 
 // Đăng ký dịch vụ Repositories vào IoC Container
 builder.Services.AddScoped<IProductRepository, ProductRepository>();

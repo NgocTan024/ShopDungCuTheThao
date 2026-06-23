@@ -23,9 +23,11 @@
         {
             <div class="col-md-4 mb-4">
                 <div class="card product-card shadow-sm h-100 p-3 bg-white">
-                    <div class="bg-light rounded p-4 text-center mb-3 text-secondary border-0" style="min-height: 160px; display: flex; align-items: center; justify-content: center;">
-                        <i class="bi bi-box-seam display-4 text-muted"></i>
+
+                    <div class="text-center mb-3 bg-light rounded-3" style="height: 200px; overflow: hidden;">
+                        <img src="@item.ImageUrl" class="w-100 h-100 object-fit-cover" alt="@item.Name" onerror="this.onerror=null; this.src='https://placehold.co/300x200?text=SportShop';" />
                     </div>
+
                     <span class="badge bg-danger-subtle text-danger fw-bold mb-2 align-self-start px-2.5 py-1">BEST SELLER</span>
                     <h5 class="fw-bold text-dark text-truncate">@item.Name</h5>
                     <p class="text-muted small text-start line-clamp" style="height: 40px; overflow: hidden;">@item.Detail</p>

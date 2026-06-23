@@ -7,5 +7,7 @@ namespace SportShop.Models.Interfaces
         IEnumerable<Product> GetAllProducts();
         IEnumerable<Product> GetTrendingProducts();
         Product? GetProductDetail(int id);
+        void AddReview(ProductReview review);
+        IEnumerable<ProductReview> GetReviewsForProduct(int productId);
     }
 }

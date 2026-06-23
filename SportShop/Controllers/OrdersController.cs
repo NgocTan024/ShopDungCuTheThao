@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SportShop.Models;
 using SportShop.Models.Interfaces;
 
@@ -16,6 +17,14 @@ namespace SportShop.Controllers
         }
 
         public IActionResult Checkout() => View();
+        // Xem lịch sử đơn hàng của tôi (Bắt buộc Đăng nhập)
+        [Authorize]
+        public IActionResult MyOrders()
+        {
+            string userEmail = User.Identity?.Name ?? "";
+            var myOrders = _orderRepository.GetOrdersByEmail(userEmail);
+            return View(myOrders);
+        }
 
         [HttpPost]
         public IActionResult Checkout(Order order)
@@ -27,8 +36,10 @@ namespace SportShop.Controllers
             _cartRepository.ClearCart();
             HttpContext.Session.SetInt32("CartCount", 0);
             return RedirectToAction("CheckoutComplete");
+
         }
 
         public IActionResult CheckoutComplete() => View();
     }
+
 }

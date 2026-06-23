@@ -1,5 +1,6 @@
 ﻿using SportShop.Data;
 using SportShop.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace SportShop.Models.Services
 {
@@ -22,5 +23,15 @@ namespace SportShop.Models.Services
             _context.Order.Add(order);
             _context.SaveChanges();
         }
+        public IEnumerable<Order> GetOrdersByEmail(string email)
+        {
+            return _context.Order
+                .Include(o => o.OrderDetails!)
+                .ThenInclude(d => d.Product)
+                .Where(o => o.Email == email)
+                .OrderByDescending(o => o.OrderPlaced)
+                .ToList();
+        }
     }
+
 }

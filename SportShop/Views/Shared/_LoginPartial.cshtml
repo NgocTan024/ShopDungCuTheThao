@@ -5,10 +5,14 @@
 <div class="d-flex align-items-center gap-2">
     @if (SignInManager.IsSignedIn(User))
     {
-        <span class="text-light me-2 small">
-            <i class="bi bi-person-circle text-warning me-1"></i> Xin chào, @UserManager.GetUserName(User)
+        <span class="text-light me-1 small">
+            <i class="bi bi-person-circle text-warning me-1"></i> Xin chào, <strong>@UserManager.GetUserName(User)</strong>
         </span>
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+        <!-- NÚT LỊCH SỬ ĐƠN HÀNG XỊN MỊN TRÊN MENU -->
+        <a class="btn btn-sm btn-outline-info rounded-pill px-3 fw-bold me-1 text-white border-info" asp-controller="Orders" asp-action="MyOrders">
+            <i class="bi bi-clock-history"></i> Đơn hàng của tôi
+        </a>
+        <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
             <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold">
                 <i class="bi bi-box-arrow-right"></i> Đăng xuất
             </button>
@@ -16,7 +20,7 @@
     }
     else
     {
-        <a class="btn btn-outline-warning btn-sm rounded-pill px-3 fw-bold" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
-        <a class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+        <a class="btn btn-outline-warning btn-sm rounded-pill px-3 fw-bold" asp-controller="Account" asp-action="Register">Đăng ký</a>
+        <a class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" asp-controller="Account" asp-action="Login">Đăng nhập</a>
     }
 </div>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportShop.Data;
 
@@ -11,9 +12,11 @@ using SportShop.Data;
 namespace SportShop.Migrations
 {
     [DbContext(typeof(SportShopDbContext))]
-    partial class SportShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260622111242_AddStatusAndPaymentToOrder")]
+    partial class AddStatusAndPaymentToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,7 +338,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/ta-tay.jpg",
                             IsTrendingProduct = true,
                             Name = "Tạ Tay Cao Su 5kg",
-                            Price = 150000m
+                            Price = 150m
                         },
                         new
                         {
@@ -345,7 +348,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/ghe-tap.jpg",
                             IsTrendingProduct = true,
                             Name = "Ghế Tập Bụng Đa Năng",
-                            Price = 1250000m
+                            Price = 1250m
                         },
                         new
                         {
@@ -355,7 +358,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/con-lan.jpg",
                             IsTrendingProduct = false,
                             Name = "Con Lăn Bụng 3 Bánh",
-                            Price = 120000m
+                            Price = 120m
                         },
                         new
                         {
@@ -365,7 +368,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/day-ngu-sac.jpg",
                             IsTrendingProduct = false,
                             Name = "Dây Ngũ Sắc Kháng Lực",
-                            Price = 180000m
+                            Price = 180m
                         },
                         new
                         {
@@ -375,7 +378,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/tham-yoga.jpg",
                             IsTrendingProduct = true,
                             Name = "Thảm Yoga Định Tuyến",
-                            Price = 350000m
+                            Price = 350m
                         },
                         new
                         {
@@ -385,7 +388,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/vong-yoga.jpg",
                             IsTrendingProduct = false,
                             Name = "Vòng Tập Yoga Chịu Lực",
-                            Price = 280000m
+                            Price = 280m
                         },
                         new
                         {
@@ -395,7 +398,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/bong-yoga.jpg",
                             IsTrendingProduct = false,
                             Name = "Bóng Yoga PVC Trơn 65cm",
-                            Price = 160000m
+                            Price = 160m
                         },
                         new
                         {
@@ -405,7 +408,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/gach-yoga.jpg",
                             IsTrendingProduct = false,
                             Name = "Gạch Xốp Hỗ Trợ Yoga",
-                            Price = 60000m
+                            Price = 60m
                         },
                         new
                         {
@@ -415,7 +418,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/giay-chay.jpg",
                             IsTrendingProduct = true,
                             Name = "Giày Chạy Siêu Nhẹ Air",
-                            Price = 850000m
+                            Price = 850m
                         },
                         new
                         {
@@ -425,7 +428,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/dai-chay.jpg",
                             IsTrendingProduct = false,
                             Name = "Đai Đeo Điện Thoại Runner",
-                            Price = 75000m
+                            Price = 75m
                         },
                         new
                         {
@@ -435,7 +438,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/binh-nuoc.jpg",
                             IsTrendingProduct = false,
                             Name = "Bình Nước Thể Thao 1L",
-                            Price = 95000m
+                            Price = 95m
                         },
                         new
                         {
@@ -445,7 +448,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/tat-chay.jpg",
                             IsTrendingProduct = false,
                             Name = "Tất Thể Thao Cổ Ngắn (3 Đôi)",
-                            Price = 50000m
+                            Price = 50m
                         },
                         new
                         {
@@ -455,7 +458,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/bong-da.jpg",
                             IsTrendingProduct = true,
                             Name = "Bóng Đá Thi Đấu Số 5",
-                            Price = 450000m
+                            Price = 450m
                         },
                         new
                         {
@@ -465,7 +468,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/gang-tay.jpg",
                             IsTrendingProduct = false,
                             Name = "Găng Tay Thủ Môn Có Xương",
-                            Price = 320000m
+                            Price = 320m
                         },
                         new
                         {
@@ -475,7 +478,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/boc-ong-dong.jpg",
                             IsTrendingProduct = false,
                             Name = "Băng Bảo Vệ Ống Quyển",
-                            Price = 45000m
+                            Price = 45m
                         },
                         new
                         {
@@ -485,7 +488,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/bang-goi.jpg",
                             IsTrendingProduct = false,
                             Name = "Băng Gối Thể Thao Bản Rộng",
-                            Price = 110000m
+                            Price = 110m
                         },
                         new
                         {
@@ -495,7 +498,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/vot-cau.jpg",
                             IsTrendingProduct = true,
                             Name = "Vợt Cầu Lông Khung Carbon",
-                            Price = 680000m
+                            Price = 680m
                         },
                         new
                         {
@@ -505,7 +508,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/hop-cau.jpg",
                             IsTrendingProduct = false,
                             Name = "Hộp Cầu Lông 12 Quả",
-                            Price = 190000m
+                            Price = 190m
                         },
                         new
                         {
@@ -515,7 +518,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/bao-vot.jpg",
                             IsTrendingProduct = false,
                             Name = "Bao Vợt Cầu Lông 2 Ngăn",
-                            Price = 150000m
+                            Price = 150m
                         },
                         new
                         {
@@ -525,7 +528,7 @@ namespace SportShop.Migrations
                             ImageUrl = "/assets/images/quan-can.jpg",
                             IsTrendingProduct = false,
                             Name = "Cuộn Quấn Cán Vợt (Combo 5 chiếc)",
-                            Price = 35000m
+                            Price = 35m
                         });
                 });
 

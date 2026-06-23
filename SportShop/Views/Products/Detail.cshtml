@@ -1,35 +1,115 @@
 ﻿@model Product
 @{
-    var currentUrl = Context.Request.Path + Context.Request.QueryString;
+    var reviews = ViewBag.Reviews as IEnumerable<ProductReview> ?? new List<ProductReview>();
+    var avgRating = ViewBag.AverageRating;
 }
 
 <div class="container mt-5 py-4">
     <div class="card border-0 shadow-sm p-4 bg-white rounded-4">
         <div class="row align-items-center">
             <div class="col-md-6 mb-4 mb-md-0">
-                <div class="bg-light text-muted text-center rounded-4 p-5 d-flex align-items-center justify-content-center border-0 shadow-inner" style="min-height: 380px;">
-                    <div>
-                        <i class="bi bi-image-alt text-body-tertiary" style="font-size: 5rem;"></i>
-                        <p class="mt-2 text-uppercase tracking-wider fw-semibold text-muted">Hình ảnh thiết bị chính hãng</p>
-                    </div>
+
+                <div class="text-center bg-light rounded-4 p-3 border-0" style="height: 350px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <img src="@Model.ImageUrl" class="mw-100 mh-100 object-fit-contain rounded-3" alt="@Model.Name" onerror="this.onerror=null; this.src='https://placehold.co/400x350?text=SportShop';" />
+                </div>
+
+                <div class="text-center mt-3 animate-fade">
+                    @if (avgRating > 0)
+                    {
+                        <span class="badge bg-warning text-dark fs-6 px-4 py-2 rounded-pill fw-bold shadow-sm">⭐ @avgRating / 5 điểm sao</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-light text-muted fs-6 px-4 py-2 rounded-pill border">Chưa có đánh giá sao</span>
+                    }
                 </div>
             </div>
+
             <div class="col-md-6 ps-md-5">
                 <span class="badge bg-success px-3 py-2 rounded-pill fs-6 mb-3"># @Model.Category</span>
                 <h1 class="fw-bold text-dark lh-tight mb-2">@Model.Name</h1>
                 <hr class="my-3 text-muted" />
-                <h5 class="fw-bold text-secondary mb-2"><i class="bi bi-card-text"></i> Đặc tính & Tính năng kĩ thuật:</h5>
+                <h5 class="fw-bold text-secondary mb-2">Mô tả sản phẩm:</h5>
                 <p class="text-muted fs-6 lh-relaxed">@Model.Detail</p>
 
                 <div class="bg-danger-subtle rounded-3 p-3 my-4">
-                    <span class="text-muted small text-uppercase fw-bold">Giá bán ưu đãi độc quyền:</span>
-                    <h2 class="text-danger fw-bold mb-0 mt-1">@Model.Price.ToString("N0") VNĐ</h2>
+                    <span class="text-muted small text-uppercase fw-bold">Giá ưu đãi độc quyền:</span>
+                    <h2 class="text-danger fw-bold mb-0 mt-1">@Model.Price.ToString("N0") đ</h2>
                 </div>
 
                 <div class="d-grid gap-2">
-                    <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pId="@Model.Id" asp-route-returnUrl="@currentUrl" class="btn btn-gradient btn-lg fw-bold py-3 rounded-pill shadow-sm"><i class="bi bi-cart-check-fill"></i> THÊM THIẾT BỊ VÀO GIỎ HÀNG</a>
-                    <a asp-controller="Products" asp-action="Shop" class="btn btn-light btn-md rounded-pill mt-2 text-muted fw-bold"><i class="bi bi-arrow-left-short"></i> Tiếp tục xem sản phẩm khác</a>
+                    <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pId="@Model.Id" class="btn btn-gradient btn-lg fw-bold py-3 rounded-pill shadow-sm"><i class="bi bi-cart-check-fill"></i> THÊM VÀO GIỎ HÀNG</a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-7 mb-4">
+            <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+                <h5 class="fw-bold text-dark mb-4 border-bottom pb-2"><i class="bi bi-chat-left-heart"></i> ĐÁNH GIÁ TỪ KHÁCH HÀNG (@reviews.Count())</h5>
+
+                @if (!reviews.Any())
+                {
+                    <p class="text-muted italic small">Chưa có lượt bình luận nào. Hãy là người đánh giá đầu tiên cho sản phẩm này!</p>
+                }
+                else
+                {
+                    <div style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                        @foreach (var rev in reviews)
+                        {
+                            <div class="bg-light p-3 rounded-3 mb-3 border-0">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-primary fw-bold small"><i class="bi bi-person-fill"></i> @rev.UserEmail?.Split('@')[0]</span>
+                                    <span class="text-muted small">@rev.DateReviewed.ToString("dd/MM/yyyy")</span>
+                                </div>
+                                <div class="text-warning my-1 small">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi @(i <= rev.Rating ? "bi-star-fill" : "bi-star")"></i>
+                                    }
+                                </div>
+                                <p class="text-dark mb-0 small mt-1">@rev.Comment</p>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm p-4 bg-white rounded-4">
+                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2"><i class="bi bi-pencil-square"></i> GỬI ĐÁNH GIÁ CỦA BẠN</h5>
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <form asp-controller="Products" asp-action="AddReview" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small">Chọn mức độ hài lòng:</label>
+                            <select name="rating" class="form-select bg-light text-dark border-0 py-2 shadow-none" required>
+                                <option value="5">⭐⭐⭐⭐⭐ 5 Sao - Tuyệt vời chất lượng cao</option>
+                                <option value="4">⭐⭐⭐⭐ 4 Sao - Rất hài lòng</option>
+                                <option value="3">⭐⭐⭐ 3 Sao - Bình thường</option>
+                                <option value="2">⭐⭐ 2 Sao - Tạm chấp nhận</option>
+                                <option value="1">⭐ 1 Sao - Chất lượng kém</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small">Nội dung đánh giá:</label>
+                            <textarea name="comment" rows="3" class="form-control bg-light text-dark border-0 shadow-none" placeholder="Sản phẩm sài chắc tay không, vải mặc thoáng mát không bạn ơi..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill py-2.5 shadow-sm">GỬI ĐÁNH GIÁ NGAY</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-warning small border-0 text-center rounded-3 my-2 py-3">
+                        <i class="bi bi-lock-fill"></i> Vui lòng <a asp-controller="Account" asp-action="Login" class="fw-bold text-decoration-none text-danger">Đăng nhập tài khoản</a> để viết đánh giá cho sản phẩm này.
+                    </div>
+                }
             </div>
         </div>
     </div>
