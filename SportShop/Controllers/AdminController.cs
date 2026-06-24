@@ -89,6 +89,13 @@ namespace SportShop.Controllers
                 _context.SaveChanges();
             }
             return RedirectToAction("Index");
+
+        }
+        public IActionResult Sales()
+        {
+            // Lấy toàn bộ danh sách đơn hàng, sắp xếp theo thời gian mới nhất
+            var allOrders = _context.Set<Order>().OrderByDescending(o => o.OrderPlaced).ToList();
+            return View(allOrders);
         }
     }
 }

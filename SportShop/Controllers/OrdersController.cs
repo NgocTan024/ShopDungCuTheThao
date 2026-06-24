@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SportShop.Data; // THÊM DÒNG NÀY ĐỂ KẾT NỐI CONTEXT
 using SportShop.Models;
 using SportShop.Models.Interfaces;
 using System;
-using System.Linq;
 
 namespace SportShop.Controllers
 {
@@ -11,18 +11,18 @@ namespace SportShop.Controllers
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IShoppingCartRepository _cartRepository;
+        private readonly SportShopDbContext _context; // ĐÃ THÊM
 
-        public OrdersController(IOrderRepository orderRepository, IShoppingCartRepository cartRepository)
+        public OrdersController(IOrderRepository orderRepository, IShoppingCartRepository cartRepository, SportShopDbContext context)
         {
             _orderRepository = orderRepository;
             _cartRepository = cartRepository;
+            _context = context; // ĐÃ THÊM
         }
 
-        // 1. Ép khách phải đăng nhập mới cho mở trang điền địa chỉ mua hàng
         [Authorize]
         public IActionResult Checkout() => View();
 
-        // 2. Xem lịch sử đơn hàng của tôi (Bắt buộc Đăng nhập)
         [Authorize]
         public IActionResult MyOrders()
         {
@@ -31,7 +31,6 @@ namespace SportShop.Controllers
             return View(myOrders);
         }
 
-        // 3. Xử lý lưu đơn hàng và gán Email tài khoản tự động
         [Authorize]
         [HttpPost]
         public IActionResult Checkout(Order order)
@@ -43,35 +42,51 @@ namespace SportShop.Controllers
                 return View(order);
             }
 
-            // 🔥 DÒNG QUAN TRỌNG NHẤT: Ép Email của đơn hàng bằng chính Email tài khoản đang đăng nhập
             order.Email = User.Identity?.Name;
+            order.OrderPlaced = DateTime.Now;
+            order.OrderTotal = _cartRepository.GetShoppingCartTotal();
 
-            // Tự động gán trạng thái đơn hàng dựa trên phương thức khách chọn (COD, MoMo, VNPAY)
             if (order.PaymentMethod == "COD")
             {
                 order.Status = "Chờ giao hàng (COD)";
             }
             else
             {
-                order.Status = "Đã thanh toán  " + order.PaymentMethod + "";
+                order.Status = "Chờ chuyển khoản ngân hàng";
             }
 
-            // Lưu đơn hàng vào SQL Server thông qua Repository
             _orderRepository.PlaceOrder(order);
 
-            // Xóa sạch giỏ hàng hiện tại
+            int newOrderId = order.Id;
+            decimal totalAmount = order.OrderTotal;
+            string selectedMethod = order.PaymentMethod;
+
             _cartRepository.ClearCart();
             HttpContext.Session.SetInt32("CartCount", 0);
 
-            // Chuyển sang trang hoàn tất và ném theo phương thức thanh toán để vẽ mã QR giả lập
-            return RedirectToAction("CheckoutComplete", new { method = order.PaymentMethod });
+            return RedirectToAction("CheckoutComplete", new { orderId = newOrderId, amount = totalAmount, method = selectedMethod });
         }
 
-        // 4. Nhận tham số phương thức thanh toán truyền sang để hiển thị cho View chúc mừng
-        public IActionResult CheckoutComplete(string method)
+        public IActionResult CheckoutComplete(int orderId, decimal amount, string method)
         {
+            ViewBag.OrderId = orderId;
+            ViewBag.Amount = amount;
             ViewBag.PaymentMethod = method;
             return View();
+        }
+
+        // 🔥 HÀM API MỚI THÊM: Xử lý cập nhật trạng thái đơn hàng sang "Đã thanh toán" dưới SQL Server
+        [HttpPost]
+        public IActionResult ConfirmPayment(int orderId)
+        {
+            var order = _context.Set<Order>().Find(orderId);
+            if (order != null)
+            {
+                order.Status = "Đã thanh toán"; // Ghi nhận trạng thái mới vào CSDL
+                _context.SaveChanges(); // Lưu thay đổi
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, message = "Không tìm thấy đơn hàng!" });
         }
     }
 }

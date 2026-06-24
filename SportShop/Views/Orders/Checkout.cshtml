@@ -2,31 +2,48 @@
 
 <div class="container mt-5" style="max-width: 650px;">
     <div class="card border-0 shadow-sm p-4 bg-white rounded-4">
-        <h3 class="fw-bold text-center text-success border-bottom pb-3 mb-4"><i class="bi bi-truck"></i> THÔNG TIN GIAO NHẬN ĐƠN HÀNG</h3>
+        <h3 class="fw-bold text-center text-success border-bottom pb-3 mb-4">THÔNG TIN GIAO NHẬN ĐƠN HÀNG</h3>
+
         <form asp-action="Checkout" method="post">
+
             <div class="row g-3 mb-3">
                 <div class="col">
                     <label asp-for="FirstName" class="form-label fw-bold text-muted small text-uppercase">Họ khách hàng</label>
-                    <input asp-for="FirstName" class="form-control rounded-3 py-2" placeholder="Ví dụ: Trần" required />
+                    <input asp-for="FirstName" class="form-control rounded-3 py-2 text-dark" placeholder="Ví dụ: Trần" required />
                 </div>
                 <div class="col">
                     <label asp-for="LastName" class="form-label fw-bold text-muted small text-uppercase">Tên khách hàng</label>
-                    <input asp-for="LastName" class="form-control rounded-3 py-2" placeholder="Ví dụ: Hoàng" required />
+                    <input asp-for="LastName" class="form-control rounded-3 py-2 text-dark" placeholder="Ví dụ: Hoàng" required />
                 </div>
             </div>
+
             <div class="mb-3">
                 <label asp-for="Email" class="form-label fw-bold text-muted small text-uppercase">Email nhận hóa đơn</label>
                 <input asp-for="Email" type="email" class="form-control rounded-3 py-2 bg-light text-dark" value="@User.Identity?.Name" readonly required />
             </div>
+
             <div class="mb-3">
                 <label asp-for="Phone" class="form-label fw-bold text-muted small text-uppercase">Số điện thoại liên hệ</label>
-                <input asp-for="Phone" class="form-control rounded-3 py-2" placeholder="Số điện thoại gọi giao hàng" required />
+                <input asp-for="Phone" class="form-control rounded-3 py-2 text-dark" placeholder="Số điện thoại gọi giao hàng" required />
             </div>
+
             <div class="mb-3">
                 <label asp-for="Address" class="form-label fw-bold text-muted small text-uppercase">Địa chỉ nhận hàng chi tiết</label>
-                <input asp-for="Address" class="form-control rounded-3 py-2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." required />
+                <input asp-for="Address" class="form-control rounded-3 py-2 text-dark" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." required />
             </div>
-            <button type="submit" class="btn btn-gradient w-100 btn-lg fw-bold py-3 mt-4 rounded-pill shadow"><i class="bi bi-shield-check"></i> XÁC NHẬN HOÀN TẤT ĐẶT HÀNG</button>
+
+            <div class="mb-4">
+                <label asp-for="PaymentMethod" class="form-label fw-bold text-muted small text-uppercase">Phương thức thanh toán</label>
+                <select asp-for="PaymentMethod" class="form-select rounded-3 py-2 text-dark fw-semibold" required>
+                    <option value="COD">Thanh toán tiền mặt khi nhận hàng (COD)</option>
+                    <option value="BANK_QR">Chuyển khoản ngân hàng qua mã VietQR (Tự động)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-gradient w-100 btn-lg fw-bold py-3 mt-2 rounded-3 shadow text-uppercase" style="font-size: 1rem; tracking-letter: 0.5px;">
+                Xác nhận hoàn tất đặt hàng
+            </button>
+
         </form>
     </div>
 </div>

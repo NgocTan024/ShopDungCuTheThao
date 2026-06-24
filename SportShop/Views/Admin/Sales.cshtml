@@ -1,0 +1,176 @@
+﻿@model IEnumerable<Order>
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-5 text-dark">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <h2 class="fw-bold m-0"><i class="bi bi-cart-check-fill text-success"></i> QUẢN LÝ ĐƠN HÀNG ĐÃ BÁN</h2>
+        <div class="d-flex gap-2">
+            <a asp-action="Index" class="btn btn-outline-secondary rounded-3 fw-bold small">
+                <i class="bi bi-box-seam"></i> Quản lý kho
+            </a>
+            <button class="btn btn-dark rounded-3 fw-bold small" onclick="window.print()">
+                <i class="bi bi-printer"></i> In báo cáo
+            </button>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark text-uppercase small fw-bold">
+                    <tr>
+                        <th class="ps-4">Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Thanh toán</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center pe-4">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold text-primary">#@item.Id</td>
+                            <td>
+                                <div class="fw-bold">@item.FirstName @item.LastName</div>
+                                <div class="text-muted small">@item.Phone</div>
+                            </td>
+                            <td class="small">@item.OrderPlaced.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <strong class="text-danger">@item.OrderTotal.ToString("N0") đ</strong>
+                            </td>
+                            <td>
+                                @if (item.PaymentMethod == "BANK_QR")
+                                {
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 rounded-2 fw-bold">VietQR</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-2 fw-bold">Tiền mặt</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Status == "Đã thanh toán")
+                                {
+                                    <span class="badge bg-success rounded-3 px-2.5 py-1.5"><i class="bi bi-check-all"></i> @item.Status</span>
+                                }
+                                else if (item.Status.Contains("Chờ"))
+                                {
+                                    <span class="badge bg-warning text-dark rounded-3 px-2.5 py-1.5"><i class="bi bi-clock-history"></i> @item.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary rounded-3 px-2.5 py-1.5">@item.Status</span>
+                                }
+                            </td>
+                            <td class="text-center pe-4">
+                                <button type="button" class="btn btn-sm btn-outline-dark rounded-3 px-3 py-1.5 fw-semibold btn-view-detail"
+                                        data-id="@item.Id"
+                                        data-name="@item.FirstName @item.LastName"
+                                        data-phone="@item.Phone"
+                                        data-email="@item.Email"
+                                        data-address="@item.Address"
+                                        data-date="@item.OrderPlaced.ToString("dd/MM/yyyy HH:mm")"
+                                        data-total="@item.OrderTotal.ToString("N0") đ"
+                                        data-method="@(item.PaymentMethod == "BANK_QR" ? "Chuyển khoản qua VietQR" : "Thanh toán tiền mặt (COD)")"
+                                        data-status="@item.Status">
+                                    <i class="bi bi-eye-fill"></i> Chi tiết
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                <p class="text-muted mt-2">Chưa có đơn hàng nào được bán ra.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg bg-white">
+            <div class="modal-header bg-dark text-white rounded-top-4 py-3">
+                <h5 class="modal-title fw-bold"><i class="bi bi-receipt"></i> CHI TIẾT ĐƠN HÀNG <span id="lblOrderId" class="text-warning"></span></h5>
+                <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-dark text-start" style="font-size: 0.95rem;">
+                <div class="row g-3">
+                    <div class="col-12 border-bottom pb-2">
+                        <span class="text-muted small text-uppercase fw-bold d-block mb-1">Khách hàng nhận hàng</span>
+                        <strong id="lblCustomerName" class="text-dark fs-5"></strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted small text-uppercase fw-bold d-block">Số điện thoại</span>
+                        <strong id="lblPhone" class="text-dark"></strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted small text-uppercase fw-bold d-block">Email tài khoản</span>
+                        <span id="lblEmail" class="text-secondary text-truncate d-block"></span>
+                    </div>
+                    <div class="col-12 border-bottom pb-3">
+                        <span class="text-muted small text-uppercase fw-bold d-block">Địa chỉ giao hàng</span>
+                        <strong id="lblAddress" class="text-dark"></strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted small text-uppercase fw-bold d-block">Thời gian mua</span>
+                        <span id="lblOrderDate" class="text-dark"></span>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted small text-uppercase fw-bold d-block">Hình thức thanh toán</span>
+                        <span id="lblPaymentMethod" class="text-dark fw-semibold"></span>
+                    </div>
+                    <div class="col-12 bg-light p-3 rounded-3 d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="text-muted small text-uppercase fw-bold d-block">Trạng thái xử lý</span>
+                            <span id="lblStatus" class="badge bg-dark mt-1 px-2.5 py-1.5 fs-7"></span>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-muted small text-uppercase fw-bold d-block">Tổng tiền hóa đơn</span>
+                            <strong id="lblOrderTotal" class="text-danger fs-4 fw-bold"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-secondary w-100 rounded-3 fw-bold py-2 text-uppercase" data-bs-dismiss="modal">Đóng cửa sổ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Tìm tất cả các nút bấm có class "btn-view-detail"
+        const viewButtons = document.querySelectorAll(".btn-view-detail");
+        // Khởi tạo đối tượng Modal của Bootstrap 5
+        const orderModal = new bootstrap.Modal(document.getElementById("orderDetailModal"));
+
+        viewButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                // Đọc toàn bộ thuộc tính data-* từ nút được click và gán vào các thẻ ID trong Modal
+                document.getElementById("lblOrderId").innerText = "#" + this.getAttribute("data-id");
+                document.getElementById("lblCustomerName").innerText = this.getAttribute("data-name");
+                document.getElementById("lblPhone").innerText = this.getAttribute("data-phone");
+                document.getElementById("lblEmail").innerText = this.getAttribute("data-email");
+                document.getElementById("lblAddress").innerText = this.getAttribute("data-address");
+                document.getElementById("lblOrderDate").innerText = this.getAttribute("data-date");
+                document.getElementById("lblOrderTotal").innerText = this.getAttribute("data-total");
+                document.getElementById("lblPaymentMethod").innerText = this.getAttribute("data-method");
+                document.getElementById("lblStatus").innerText = this.getAttribute("data-status");
+
+                // Ra lệnh mở bung popup modal lên màn hình
+                orderModal.show();
+            });
+        });
+    });
+</script>
