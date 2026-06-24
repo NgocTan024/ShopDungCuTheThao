@@ -3,7 +3,7 @@
     var categories = new List<string> { "Gym", "Yoga", "Chạy bộ", "Bóng đá", "Cầu lông" };
     var currentUrl = Context.Request.Path + Context.Request.QueryString;
 
-    // SỬA ĐỔI TẠI ĐÂY: Thêm ?? 1 và ?? 5 để tránh lỗi biến bị Null gây sập ứng dụng
+    // Đọc an toàn thông số từ ViewBag (Thêm ?? 1 để không bao giờ bị lỗi crash null)
     string currentSort = ViewBag.CurrentSort;
     string currentSearch = ViewBag.CurrentSearch;
     string currentCategory = ViewBag.CurrentCategory;
@@ -15,17 +15,19 @@
     <div class="card border-0 shadow-sm p-3 mb-4 bg-white rounded-4">
         <form asp-controller="Products" asp-action="Shop" method="get" class="row g-3 align-items-center">
             <input type="hidden" name="category" value="@currentCategory" />
+
             <div class="col-md-6">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input type="text" name="searchString" value="@currentSearch" class="form-control bg-light border-0 py-2 shadow-none" placeholder="Tìm sản phẩm thể thao..." />
+                    <input type="text" name="searchString" value="@currentSearch" class="form-control bg-light border-0 py-2 shadow-none text-dark" placeholder="Tìm tạ tay, thảm yoga, giày chạy..." />
                     @if (!string.IsNullOrEmpty(currentSearch))
                     {
                         <a asp-controller="Products" asp-action="Shop" asp-route-category="@currentCategory" asp-route-sortOrder="@currentSort" class="btn btn-light text-muted border-0 d-flex align-items-center"><i class="bi bi-x-circle"></i></a>
                     }
-                    <button type="submit" class="btn btn-dark px-4 fw-bold">TÌM</button>
+                    <button type="submit" class="btn btn-dark px-4 fw-bold">TÌM KIẾM</button>
                 </div>
             </div>
+
             <div class="col-md-6 text-md-end d-flex justify-content-md-end align-items-center gap-2">
                 <label class="text-muted small fw-bold text-uppercase mb-0"><i class="bi bi-sort-down"></i> Sắp xếp:</label>
                 <select name="sortOrder" class="form-select bg-light border-0 py-2 shadow-none w-auto rounded-3 fw-semibold text-dark" onchange="this.form.submit()">

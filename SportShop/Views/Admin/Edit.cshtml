@@ -1,0 +1,56 @@
+﻿@model Product
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-5" style="max-width: 700px;">
+    <div class="card border-0 shadow-sm p-4 p-sm-5 bg-white rounded-4 text-dark">
+        <h3 class="fw-bold text-primary text-center border-bottom pb-3 mb-4"><i class="bi bi-pencil-square"></i> CẬP NHẬT SẢN PHẨM</h3>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label class="form-label fw-bold small text-muted text-uppercase">Tên sản phẩm</label>
+                <input asp-for="Name" class="form-control py-2 shadow-none border rounded-3 text-dark" required />
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small text-muted text-uppercase">Giá bán điều chỉnh (đ)</label>
+                    <input asp-for="Price" type="number" class="form-control py-2 shadow-none border rounded-3 text-dark" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small text-muted text-uppercase">Phân loại môn tập</label>
+                    <select asp-for="Category" class="form-select py-2 shadow-none border rounded-3 text-dark" required>
+                        <option value="Gym">Gym</option>
+                        <option value="Yoga">Yoga</option>
+                        <option value="Chạy bộ">Chạy bộ</option>
+                        <option value="Bóng đá">Bóng đá</option>
+                        <option value="Cầu lông">Cầu lông</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold small text-muted text-uppercase">Đường dẫn ảnh (`ImageUrl`)</label>
+                <input asp-for="ImageUrl" class="form-control py-2 shadow-none border rounded-3 text-dark" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold small text-muted text-uppercase">Mô tả sản phẩm</label>
+                <textarea asp-for="Detail" rows="4" class="form-control shadow-none border rounded-3 text-dark" required></textarea>
+            </div>
+
+            <div class="form-check mb-4 bg-light p-3 rounded-3 ps-5">
+                <input asp-for="IsTrendingProduct" type="checkbox" class="form-check-input" id="isTrend">
+                <label class="form-check-label fw-semibold text-secondary" for="isTrend">Sản phẩm xu hướng bán chạy (Hiển thị ở trang chủ)</label>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a asp-action="Index" class="btn btn-light border w-50 rounded-pill fw-bold py-2.5">HỦY BỎ</a>
+                <button type="submit" class="btn btn-primary w-50 rounded-pill fw-bold py-2.5 shadow-sm">CẬP NHẬT NGAY</button>
+            </div>
+        </form>
+    </div>
+</div>

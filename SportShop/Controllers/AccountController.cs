@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims; // 🔥 THÊM DÒNG NÀY ĐỂ SỬ DỤNG CLAIM PHÂN QUYỀN
+using System.Threading.Tasks;
 
 namespace SportShop.Controllers
 {
@@ -67,6 +69,14 @@ namespace SportShop.Controllers
 
             if (result.Succeeded)
             {
+                // 🔥 ĐÃ THÊM LOGIC TẠI ĐÂY: 
+                // Nếu đăng ký trúng email hệ thống chỉ định, tự động đóng dấu mộc quyền "Admin" vào DB Identity
+                if (email.Trim().ToLower() == "admin@gmail.com")
+                {
+                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin"));
+                }
+
+                // Đăng nhập ngay sau khi tạo tài khoản thành công
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
